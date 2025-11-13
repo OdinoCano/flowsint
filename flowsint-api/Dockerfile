@@ -2,6 +2,8 @@ FROM python:3.12-slim AS base
 
 ENV PYTHONUNBUFFERED=1
 ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PIP_DEFAULT_TIMEOUT=180 \
+    PIP_RETRIES=10
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -14,6 +16,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sSL https://install.python-poetry.org | python3 - \
     && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+
+RUN poetry config installer.max-workers 4
 
 WORKDIR /app
 
